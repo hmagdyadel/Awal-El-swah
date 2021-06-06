@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "903486285840",
+    "project_id": "awal-elswah",
+    "storage_bucket": "awal-elswah.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903486285840:android:e12a284682a69b07f58295",
+        "android_client_info": {
+          "package_name": "hmagdyadel.awal_el_swah.awal_el_swah"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "903486285840-5e7fiub0a15152q9o426gmleccittamg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hmagdyadel.awal_el_swah.awal_el_swah",
+            "certificate_hash": "604985af4d26d12a0c4583f14379c1c13a3a25ad"
+          }
+        },
+        {
+          "client_id": "903486285840-2i4uq43fh1u6kdlf3718likrp5pkoion.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR7Cg1bugqEv9uo9T7-tgndVocX-5iOc8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "903486285840-2i4uq43fh1u6kdlf3718likrp5pkoion.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
