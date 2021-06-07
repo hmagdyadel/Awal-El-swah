@@ -1,5 +1,5 @@
-import 'package:awal_el_swah/screens/about_screen.dart';
-import 'package:awal_el_swah/screens/contact_us.dart';
+import '../screens/about_screen.dart';
+import '../screens/contact_us.dart';
 
 import '../screens/cart_screen.dart';
 import '../screens/edit_product_screen.dart';
@@ -33,8 +33,22 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: Auth()),
         ChangeNotifierProvider.value(value: Cart()),
-        ChangeNotifierProvider.value(value: Products()),
-        ChangeNotifierProvider.value(value: Order()),
+        ChangeNotifierProxyProvider<Auth, Products>(
+            create: (_) => Products(),
+            update: (ctx, authValue, previousProducts) => previousProducts!
+              ..getData(
+                authValue.token,
+                authValue.userId,
+                previousProducts.items,
+              )),
+        ChangeNotifierProxyProvider<Auth, Order>(
+            create: (_) => Order(),
+            update: (ctx, authValue, previousOrder) => previousOrder!
+              ..getData(
+                authValue.token,
+                authValue.userId,
+                previousOrder.orders,
+              )),
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
