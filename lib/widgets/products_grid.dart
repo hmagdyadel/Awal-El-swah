@@ -12,17 +12,29 @@ class ProductsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final productData = Provider.of<Products>(context);
     final products = showFav ? productData.favoriteItems : productData.items;
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 1,
-          childAspectRatio: 3 / 2,
-          crossAxisSpacing: 10,
-          mainAxisExtent: 10),
-      itemCount: products!.length,
-      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-        value: products[i],
-        child: ProductItem(),
-      ),
-    );
+
+    return products!.isEmpty
+        ? Center(
+            child: Text(
+              'لا توجد منتجات!',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          )
+        : GridView.builder(
+            padding: EdgeInsets.all(15),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1,
+                childAspectRatio: 5/ 4,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10),
+            itemCount: products.length,
+            itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+              value: products[i],
+              child: ProductItem(),
+            ),
+          );
   }
 }

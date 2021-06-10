@@ -1,3 +1,5 @@
+import '../screens/tabs_screen.dart';
+
 import '../screens/about_screen.dart';
 import '../screens/contact_us.dart';
 
@@ -74,7 +76,7 @@ class MyApp extends StatelessWidget {
           ),
           // home: AuthScreen(),
           home: auth.isAuth
-              ? ProductOver()
+              ? TabScreen()
               : FutureBuilder(
                   future: auth.tryAutoLogin(),
                   builder: (ctx, AsyncSnapshot authSnapshot) =>
@@ -84,6 +86,7 @@ class MyApp extends StatelessWidget {
                 ),
           routes: {
             ProductOver.routeName: (ctx) => ProductOver(),
+            TabScreen.routeName:(ctx)=>TabScreen(),
             ProductDetailScreen.routeName: (_) => ProductDetailScreen(),
             CartScreen.routeName: (_) => CartScreen(),
             OrderScreen.routeName: (_) => OrderScreen(),

@@ -1,5 +1,4 @@
-import '../providers/auth.dart';
-import '../screens/auth_screen.dart';
+
 import '../widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,9 +32,9 @@ class _ProductOverState extends State<ProductOver> {
             () => _isLoading = false,
           ),
         )
-        .catchError(
-          (error) => print(error),
-        );
+        .catchError((_) => setState(
+              () => _isLoading = false,
+            ));
   }
 
   @override

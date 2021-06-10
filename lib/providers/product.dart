@@ -9,7 +9,7 @@ class Product with ChangeNotifier {
   final double? price;
   final double? weight;
   final String? imageUrl;
-  bool? isFavorite;
+  bool isFavorite;
 
   Product({
     required this.id,
@@ -21,14 +21,14 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  void _setFavValue(bool? newValue) {
+  void _setFavValue(bool newValue) {
     isFavorite = newValue;
     notifyListeners();
   }
 
   Future<void> toggleFavoriteStatus(String token, String userId) async {
     final oldStatus = isFavorite;
-    isFavorite = !isFavorite!;
+    isFavorite = !isFavorite;
     notifyListeners();
 
     final url =
