@@ -10,49 +10,52 @@ class UserProductScreen extends StatelessWidget {
 
   Future<void> _refreshProducts(BuildContext context) async {
     await Provider.of<Products>(context, listen: false)
-        .fetchAndSetProducts(true);
+        .fetchAndSetProducts();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Center(child: const Text('أول السواح')),
-        actions: [
-          IconButton(
-              onPressed: () =>
-                  Navigator.of(context).pushNamed(EditProductScreen.routeName,arguments: 'add'),
-              icon: Icon(Icons.add))
-        ],
-      ),
-      drawer: AppDrawer(),
-      body: FutureBuilder(
-        future: _refreshProducts(context),
-        builder: (ctx, AsyncSnapshot snapshot) =>
-            //snapshot.connectionState ==
-            //         ConnectionState.waiting
-            //     ? Center(child: CircularProgressIndicator())
-            //     :
-            RefreshIndicator(
-                child: Consumer<Products>(
-                  builder: (ctx, productData, _) => Padding(
-                    padding: EdgeInsets.all(8),
-                    child: ListView.builder(
-                        itemCount: productData.items!.length,
-                        itemBuilder: (_, index) => Column(
-                              children: [
-                                UserProductItem(
-                                    id: productData.items![index].id.toString(),
-                                    title: productData.items![index].title
-                                        .toString(),
-                                    imageUrl: productData.items![index].imageUrl
-                                        .toString()),
-                                Divider(),
-                              ],
-                            )),
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Center(child: const Text('التحكم في المنتجات')),
+          actions: [
+            IconButton(
+                onPressed: () =>
+                    Navigator.of(context).pushNamed(EditProductScreen.routeName,arguments: 'add'),
+                icon: Icon(Icons.add))
+          ],
+        ),
+        drawer: AppDrawer(),
+        body: FutureBuilder(
+          future: _refreshProducts(context),
+          builder: (ctx, AsyncSnapshot snapshot) =>
+              //snapshot.connectionState ==
+              //         ConnectionState.waiting
+              //     ? Center(child: CircularProgressIndicator())
+              //     :
+              RefreshIndicator(
+                  child: Consumer<Products>(
+                    builder: (ctx, productData, _) => Padding(
+                      padding: EdgeInsets.all(8),
+                      child: ListView.builder(
+                          itemCount: productData.items!.length,
+                          itemBuilder: (_, index) => Column(
+                                children: [
+                                  UserProductItem(
+                                      id: productData.items![index].id.toString(),
+                                      title: productData.items![index].title
+                                          .toString(),
+                                      imageUrl: productData.items![index].imageUrl
+                                          .toString()),
+                                  Divider(),
+                                ],
+                              )),
+                    ),
                   ),
-                ),
-                onRefresh: () => _refreshProducts(context)),
+                  onRefresh: () => _refreshProducts(context)),
+        ),
       ),
     );
   }

@@ -9,29 +9,32 @@ class OrderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text('طلباتك')),
-      ),
-      drawer: AppDrawer(),
-      body: FutureBuilder(
-        future: Provider.of<Order>(context, listen: false).fetchAndSetOrders(),
-        builder: (ctx, AsyncSnapshot snapshot) {
-            if (snapshot.error != null) {
-              return Center(
-                child: Text('حدث خطأ ما'),
-              );
-            } else {
-              return Consumer<Order>(
-                builder: (ctx, orderData, child) => ListView.builder(
-                  itemCount: orderData.orders.length,
-                  itemBuilder: (ctx, index) =>
-                      OrderItem(orderData.orders[index]),
-                ),
-              );
-            }
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Center(child: Text('طلباتك')),
+        ),
+        drawer: AppDrawer(),
+        body: FutureBuilder(
+          future: Provider.of<Order>(context, listen: false).fetchAndSetOrders(),
+          builder: (ctx, AsyncSnapshot snapshot) {
+              if (snapshot.error != null) {
+                return Center(
+                  child: Text('حدث خطأ ما'),
+                );
+              } else {
+                return Consumer<Order>(
+                  builder: (ctx, orderData, child) => ListView.builder(
+                    itemCount: orderData.orders.length,
+                    itemBuilder: (ctx, index) =>
+                        OrderItem(orderData.orders[index]),
+                  ),
+                );
+              }
 
-        },
+          },
+        ),
       ),
     );
   }

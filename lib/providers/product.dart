@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Product with ChangeNotifier {
+  final String? category;
   final String? id;
   final String? title;
   final String? description;
@@ -12,6 +13,7 @@ class Product with ChangeNotifier {
   bool isFavorite;
 
   Product({
+    required this.category,
     required this.id,
     required this.title,
     required this.description,

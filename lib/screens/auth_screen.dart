@@ -1,11 +1,6 @@
 import 'dart:math';
-
 import '../providers/auth.dart';
-
 import '../models/http_exception.dart';
-
-import '../utils/google_authentication.dart';
-import '../widgets/google_sign_in.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +8,7 @@ import 'package:provider/provider.dart';
 
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth-screen';
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -73,35 +69,36 @@ class AuthScreen extends StatelessWidget {
                       child: AuthCard(),
                       flex: deviceSize.width > 600 ? 2 : 2,
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Flexible(
-                        child: SafeArea(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          left: 16,
-                          right: 16,
-                          bottom: 20,
-                        ),
-                        child: FutureBuilder(
-                          future: Authentication.initializeFirebase(
-                              context: context),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                              return Text('Error initializing Firebase');
-                            } else if (snapshot.connectionState ==
-                                ConnectionState.done) {
-                              return GoogleSignInButton();
-                            }
-                            return CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.orange),
-                            );
-                          },
-                        ),
-                      ),
-                    ))
+                    // SizedBox(
+                    //   height: 30,
+                    // ),
+                    // Flexible(
+                    //   child: SafeArea(
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.only(
+                    //         left: 16,
+                    //         right: 16,
+                    //         bottom: 20,
+                    //       ),
+                    //       child: FutureBuilder(
+                    //         future: Authentication.initializeFirebase(
+                    //             context: context),
+                    //         builder: (context, snapshot) {
+                    //           if (snapshot.hasError) {
+                    //             return Text('Error initializing Firebase');
+                    //           } else if (snapshot.connectionState ==
+                    //               ConnectionState.done) {
+                    //             return GoogleSignInButton();
+                    //           }
+                    //           return CircularProgressIndicator(
+                    //             valueColor: AlwaysStoppedAnimation<Color>(
+                    //                 Colors.orange),
+                    //           );
+                    //         },
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -195,7 +192,7 @@ class _AuthCardState extends State<AuthCard>
       }
       _showErrorDialog(errorMessage);
     } catch (e) {
-      const errorMessage = 'غير قادر علي التسجيل، من فضلك حاول مرة اخري';
+      const errorMessage = 'غير قادر علي التسجيل، من فضلك حاول مرة اخري.';
       _showErrorDialog(errorMessage);
     }
     setState(() {
@@ -219,17 +216,20 @@ class _AuthCardState extends State<AuthCard>
 
   void _showErrorDialog(String errorMessage) {
     showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-              title: Text('خطآ'),
-              content: Text(errorMessage),
-              actions: [
-                OutlinedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('تم'))
-              ],
-            ));
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('An error occurred'),
+        content: Text(errorMessage),
+        actions: [
+          OutlinedButton(
+              onPressed: () => Navigator.of(context).pop(), child: Text('تم'))
+        ],
+      ),
+    );
   }
+
+  bool _obscureText = false;
+  bool _obscureTextConfirm = false;
 
   @override
   Widget build(BuildContext context) {
@@ -269,8 +269,21 @@ class _AuthCardState extends State<AuthCard>
                 ),
                 TextFormField(
                   textDirection: TextDirection.ltr,
-                  decoration: InputDecoration(labelText: 'الرقم السري'),
-                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'الرقم السري',
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                      icon: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.purple,
+                      ),
+                    ),
+                  ),
+                  obscureText: !_obscureText,
                   controller: _passwordController,
                   validator: (val) {
                     if (val!.isEmpty || val.length < 6) {
@@ -295,9 +308,23 @@ class _AuthCardState extends State<AuthCard>
                       position: _slideAnimation,
                       child: TextFormField(
                         textDirection: TextDirection.ltr,
-                        decoration:
-                            InputDecoration(labelText: 'تآكيد الرقم السري'),
-                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: 'تآكيد الرقم السري',
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _obscureTextConfirm = !_obscureTextConfirm;
+                              });
+                            },
+                            icon: Icon(
+                              _obscureTextConfirm
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.purple,
+                            ),
+                          ),
+                        ),
+                        obscureText: !_obscureTextConfirm,
                         enabled: _authMode == AuthMode.Signup,
                         validator: _authMode == AuthMode.Signup
                             ? (val) {
@@ -319,7 +346,9 @@ class _AuthCardState extends State<AuthCard>
                     child: Text(_authMode == AuthMode.Login
                         ? 'تسجيل الدخول'
                         : 'إنشاء حساب'),
-                    onPressed: _submit,
+                    onPressed: () {
+                      _submit();
+                    },
                     style: ButtonStyle(
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                           EdgeInsets.symmetric(horizontal: 30, vertical: 8)),

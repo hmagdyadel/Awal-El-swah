@@ -25,10 +25,33 @@ class Cart with ChangeNotifier {
     return _items.length;
   }
 
+  String get whatsOrder {
+    String text = '';
+    _items.forEach((key, value) {
+      text = text +
+          '\n' +
+          value.title +
+          '     ' +
+          (value.price * value.quantity).toString() +
+          '       ' +
+          value.quantity.toString() +
+          'X';
+    });
+    text = text +
+        '\n' +
+        '____________________' +
+        '\n' +
+        'الإجمالي' +
+        '           ' +
+        totalAmount.toString() +'  '+
+        'جنيه';
+    return text;
+  }
+
   double get totalAmount {
     var total = 0.0;
-    _items.forEach((key, CartItem) {
-      total += CartItem.price * CartItem.quantity;
+    _items.forEach((key, cartItem) {
+      total += cartItem.price * cartItem.quantity;
     });
     return total;
   }

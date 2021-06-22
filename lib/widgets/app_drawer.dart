@@ -1,3 +1,6 @@
+import '../screens/category_screen.dart';
+
+import '../screens/auth_screen.dart';
 import '../screens/about_screen.dart';
 import '../screens/contact_us.dart';
 import '../screens/product_overview.dart';
@@ -7,8 +10,13 @@ import '../screens/orders_screen.dart';
 import '../screens/user_product_screen.dart';
 import '../providers/auth.dart';
 
-class AppDrawer extends StatelessWidget {
-  buildListTile(title, icon, tapHandler) {
+class AppDrawer extends StatefulWidget {
+  @override
+  _AppDrawerState createState() => _AppDrawerState();
+}
+
+class _AppDrawerState extends State<AppDrawer> {
+  buildListTile(title, icon, tapHandler, double fontSize) {
     return ListTile(
       leading: Icon(
         icon,
@@ -19,7 +27,7 @@ class AppDrawer extends StatelessWidget {
         title,
         style: TextStyle(
           color: Color.fromRGBO(20, 50, 50, 1),
-          fontSize: 24,
+          fontSize: fontSize,
           fontFamily: 'RobotoCondensed',
           fontWeight: FontWeight.bold,
         ),
@@ -28,8 +36,15 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
+  TextEditingController _textEditingController = TextEditingController();
+
+  String? codeDialog;
+
+  String? valueText;
+
   @override
   Widget build(BuildContext context) {
+    final userId = Provider.of<Auth>(context, listen: false).userId;
     return WillPopScope(
       onWillPop: () {
         Navigator.pushReplacementNamed(context, ProductOver.routeName);
@@ -70,8 +85,9 @@ class AppDrawer extends StatelessWidget {
                     Icons.category_outlined,
                     () {
                       Navigator.of(context)
-                          .pushReplacementNamed(ProductOver.routeName);
+                          .pushReplacementNamed(CategoriesScreen.routeName);
                     },
+                    24.0,
                   ),
                   buildListTile(
                     'الطلبات',
@@ -80,6 +96,7 @@ class AppDrawer extends StatelessWidget {
                       Navigator.pushReplacementNamed(
                           context, OrderScreen.routeName);
                     },
+                    24.0,
                   ),
                   Divider(height: 10, color: Colors.black54),
                   buildListTile(
@@ -89,6 +106,7 @@ class AppDrawer extends StatelessWidget {
                       Navigator.of(context)
                           .pushReplacementNamed(ContactUs.routeName);
                     },
+                    24.0,
                   ),
                   buildListTile(
                     'عن التطبيق',
@@ -97,26 +115,28 @@ class AppDrawer extends StatelessWidget {
                       Navigator.of(context)
                           .pushReplacementNamed(AboutApp.routeName);
                     },
+                    24.0,
                   ),
                   Divider(height: 10, color: Colors.black54),
                   buildListTile(
                     'تسجيل الخروج',
                     Icons.logout,
                     () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context)
-                          .pushReplacementNamed(ProductOver.routeName);
                       Provider.of<Auth>(context, listen: false).logout();
-                    },
-                  ),
-                  buildListTile(
-                    'التحكم في المنتجات',
-                    Icons.edit,
-                    () {
                       Navigator.of(context)
-                          .pushReplacementNamed(UserProductScreen.routeName);
+                          .pushReplacementNamed(AuthScreen.routeName);
                     },
+                    24.0,
                   ),
+                  if (userId == 'jZbtW288QlY92q9j5rbz7dzSi222')
+                    buildListTile(
+                      'التحكم في المنتجات',
+                      Icons.edit,
+                      () async {
+                        await _displayTextInputDialog(context);
+                      },
+                      18.0,
+                    ),
                 ],
               ),
             ),
@@ -124,5 +144,78 @@ class AppDrawer extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            backgroundColor: Color.fromRGBO(255, 254, 229, 1),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32))),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    'ادخل الرقم السري',
+                    style: TextStyle(fontSize: 16, color: Colors.teal),
+                  ),
+                ),
+              ],
+            ),
+            content: TextField(
+              textAlign: TextAlign.right,
+              obscureText: true,
+              onChanged: (value) {
+                setState(() {
+                  valueText = value;
+                });
+              },
+              controller: _textEditingController,
+              decoration: InputDecoration(hintText: 'ادخل الرقم السري'),
+            ),
+            actions: [
+              FlatButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                color: Colors.red,
+                textColor: Colors.white,
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(ctx);
+                  });
+                },
+                child: Text(
+                  'إلغاء',
+                ),
+              ),
+              FlatButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                color: Colors.green,
+                textColor: Colors.white,
+                child: Text('موافق'),
+                onPressed: () {
+                  setState(() {
+                    codeDialog = valueText;
+                  });
+
+                  Navigator.pop(ctx);
+                  if (codeDialog == '1234') {
+                    codeDialog = '';
+                    valueText = '';
+                    Navigator.of(context)
+                        .pushReplacementNamed(UserProductScreen.routeName);
+                  }
+                },
+              ),
+            ],
+          );
+        });
   }
 }

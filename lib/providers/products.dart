@@ -65,15 +65,14 @@ class Products with ChangeNotifier {
     return _items!.firstWhere((prod) => prod.id == id);
   }
 
-  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
-    final filteredString =
-        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+  Future<void> fetchAndSetProducts() async {
+    final filteredString ='orderBy="creatorId"&equalTo="$userId"';
     Uri url = Uri.parse(
         'https://awal-elswah-default-rtdb.firebaseio.com/products.json?auth=$authToken$filteredString');
     try {
       final res = await http.get(url);
       final Map<String, dynamic>? extractedData =
-          json.decode(res.body) as Map<String, dynamic>;
+      json.decode(res.body) as Map<String, dynamic>;
       if (extractedData == null) {
         return;
       }
@@ -85,6 +84,7 @@ class Products with ChangeNotifier {
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
           id: prodId,
+          category: prodData['category'],
           title: prodData['title'],
           description: prodData['description'],
           price: prodData['price'],
@@ -100,26 +100,36 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> addProduct(Product product) async {
+  Future<void> addProduct({
+    required String category,
+    required String title,
+    required String description,
+    required double price,
+    required double weight,
+    required String imageUrl,
+  }) async {
+    print('the image in add product is:$imageUrl');
     final url =
         'https://awal-elswah-default-rtdb.firebaseio.com/products.json?auth=$authToken';
     try {
       final res = await http.post(Uri.parse(url),
           body: json.encode({
-            'title': product.title,
-            'description': product.description,
-            'price': product.price,
-            'weight': product.weight,
-            'imageUrl': product.imageUrl,
+            'category': category,
+            'title': title,
+            'description': description,
+            'price': price,
+            'weight': weight,
+            'imageUrl': imageUrl,
             'creatorId': userId,
           }));
       final newProduct = Product(
         id: json.decode(res.body)['name'],
-        title: product.title,
-        description: product.description,
-        price: product.price,
-        weight: product.weight,
-        imageUrl: product.imageUrl,
+        category: category,
+        title: title,
+        description: description,
+        price: price,
+        weight: weight,
+        imageUrl: imageUrl,
       );
       _items!.add(newProduct);
       notifyListeners();
@@ -128,20 +138,37 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> updateProduct(String id, Product newProduct) async {
+  Future<void> updateProduct({
+    String? id,
+    String? category,
+    String? title,
+    String? description,
+    double? price,
+    double? weight,
+    String? imageUrl,
+  }) async {
     final prodIndex = _items!.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
       final url =
           'https://awal-elswah-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
       await http.patch(Uri.parse(url),
           body: json.encode({
-            'title': newProduct.title,
-            'description': newProduct.description,
-            'price': newProduct.price,
-            'weight': newProduct.weight,
-            'imageUrl': newProduct.imageUrl,
+            'category': category,
+            'title': title,
+            'description': description,
+            'price': price,
+            'weight': weight,
+            'imageUrl': imageUrl,
           }));
-      _items![prodIndex] = newProduct;
+      _items![prodIndex] = Product(
+        category: category,
+        id: id,
+        title: title,
+        description: description,
+        price: price,
+        weight: weight,
+        imageUrl: imageUrl,
+      );
       notifyListeners();
     } else {
       print('...');

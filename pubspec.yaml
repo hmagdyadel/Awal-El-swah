@@ -26,8 +26,11 @@ dev_dependencies:
   http:
   firebase_auth:
   firebase_core:
+  firebase_storage:
   pinput:
   google_sign_in:
+  image_picker:
+  whatsapp_unilink:
 
 flutter_icons:
   android: true

@@ -1,3 +1,5 @@
+import '../screens/category_screen.dart';
+
 import '../screens/tabs_screen.dart';
 
 import '../screens/about_screen.dart';
@@ -20,11 +22,13 @@ import '../providers/orders.dart';
 import '../providers/products.dart';
 
 import '../providers/auth.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -79,14 +83,14 @@ class MyApp extends StatelessWidget {
               ? TabScreen()
               : FutureBuilder(
                   future: auth.tryAutoLogin(),
-                  builder: (ctx, AsyncSnapshot authSnapshot) =>
+                  builder: (ctx, authSnapshot) =>
                       authSnapshot.connectionState == ConnectionState.waiting
                           ? SplashScreen()
                           : AuthScreen(),
                 ),
           routes: {
             ProductOver.routeName: (ctx) => ProductOver(),
-            TabScreen.routeName:(ctx)=>TabScreen(),
+            TabScreen.routeName: (ctx) => TabScreen(),
             ProductDetailScreen.routeName: (_) => ProductDetailScreen(),
             CartScreen.routeName: (_) => CartScreen(),
             OrderScreen.routeName: (_) => OrderScreen(),
@@ -96,6 +100,7 @@ class MyApp extends StatelessWidget {
             NotFoundPage.routeName: (_) => NotFoundPage(),
             ContactUs.routeName: (_) => ContactUs(),
             AboutApp.routeName: (_) => AboutApp(),
+            CategoriesScreen.routeName: (_) => CategoriesScreen(),
           },
         ),
       ),

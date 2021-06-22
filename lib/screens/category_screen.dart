@@ -3,6 +3,7 @@ import '../widgets/dummy_data.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesScreen extends StatelessWidget {
+  static const routeName = '/categories';
   @override
   Widget build(BuildContext context) {
     return Scaffold(

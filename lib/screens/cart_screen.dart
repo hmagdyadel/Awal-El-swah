@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/cart.dart' show Cart;
 import '../widgets/cart_item.dart';
 import '../providers/orders.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = '/cart-screen';
@@ -89,9 +90,15 @@ class _OrderButtonState extends State<OrderButton> {
                 });
                 await Provider.of<Order>(context, listen: false).addOrder(
                     widget.cart.items.values.toList(), widget.cart.totalAmount);
+
+                String text =  Provider.of<Cart>(context,listen: false).whatsOrder;
+
+                await launch(
+                    'https://api.whatsapp.com/send?phone=201125516481&text=$text');
                 setState(() {
                   _isLoading = false;
                 });
+
                 widget.cart.clear();
               },
         child: _isLoading ? CircularProgressIndicator() : Text('اُطلب الآن'));
