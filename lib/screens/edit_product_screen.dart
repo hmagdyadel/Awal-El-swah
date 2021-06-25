@@ -1,4 +1,5 @@
 import 'dart:io';
+import '../screens/user_product_screen.dart';
 import '../providers/products.dart';
 import '../providers/product.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +78,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         await showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
-                  title: Text('حدث خطأ'),
+                  title: Text('Error'),
                   content: Text('هناك شئ خطأ حدث'),
                   actions: [
                     TextButton(
@@ -154,283 +155,294 @@ class _EditProductScreenState extends State<EditProductScreen> {
   Widget build(BuildContext context) {
     final String? productId =
         ModalRoute.of(context)!.settings.arguments as String;
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        appBar: AppBar(
-          title: productId == 'add'
-              ? Center(child: Text('إضافة منتج'))
-              : Center(child: Text('تعديل منتج')),
-          actions: [IconButton(onPressed: _saveForm, icon: Icon(Icons.save))],
-        ),
-        body: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Padding(
-                padding: EdgeInsets.all(20),
-                child: Form(
-                  key: _formKey,
-                  child: ListView(
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            'اختر القسم :',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.teal,
-                              fontWeight: FontWeight.bold,
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pushReplacementNamed(context, UserProductScreen.routeName);
+        return new Future(() => true);
+      },
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          appBar: AppBar(
+            title: productId == 'add'
+                ? Center(child: Text('إضافة منتج'))
+                : Center(child: Text('تعديل منتج')),
+            actions: [IconButton(onPressed: _saveForm, icon: Icon(Icons.save))],
+          ),
+          body: _isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Form(
+                    key: _formKey,
+                    child: ListView(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'اختر القسم :',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.teal,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
+                            SizedBox(width: 30),
+                            DropdownButton(
+                              elevation: 0,
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.teal),
+                              hint: Text('اختر القسم'),
+                              value: _selectedCategory,
+                              items: _catList.map((item) {
+                                return DropdownMenuItem(
+                                  value: item,
+                                  child: Column(
+                                    children: [
+                                      Text(item!.toString()),
+                                      Divider(
+                                        height: 1,
+                                        color: Colors.black54,
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (newVal) {
+                                setState(() {
+                                  _selectedCategory = newVal.toString();
+                                  category = _selectedCategory;
+                                });
+                                _editedProduct = Product(
+                                    id: _editedProduct.id,
+                                    category: _selectedCategory,
+                                    title: _editedProduct.title,
+                                    description: _editedProduct.description,
+                                    price: _editedProduct.price,
+                                    weight: _editedProduct.weight,
+                                    imageUrl: _editedProduct.imageUrl,
+                                    isFavorite: _editedProduct.isFavorite);
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12),
+                        TextFormField(
+                          textDirection: TextDirection.rtl,
+                          initialValue: _initialValues['title'].toString(),
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: BorderSide()),
+                            labelText: 'اسم المنتج',
                           ),
-                          SizedBox(width: 30),
-                          DropdownButton(
-                            elevation: 0,
-                            style: TextStyle(fontSize: 16, color: Colors.teal),
-                            hint: Text('اختر القسم'),
-                            value: _selectedCategory,
-                            items: _catList.map((item) {
-                              return DropdownMenuItem(
-                                value: item,
-                                child: Column(
-                                  children: [
-                                    Text(item!.toString()),
-                                    Divider(
-                                      height: 1,
-                                      color: Colors.black54,
-                                    )
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (newVal) {
-                              setState(() {
-                                _selectedCategory = newVal.toString();
-                                category = _selectedCategory;
-                              });
-                              _editedProduct = Product(
-                                  id: _editedProduct.id,
-                                  category: _selectedCategory,
-                                  title: _editedProduct.title,
-                                  description: _editedProduct.description,
-                                  price: _editedProduct.price,
-                                  weight: _editedProduct.weight,
-                                  imageUrl: _editedProduct.imageUrl,
-                                  isFavorite: _editedProduct.isFavorite);
-                            },
+                          textInputAction: TextInputAction.next,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context)
+                                .requestFocus(_priceFocusNode);
+                          },
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'من فضلك ادخل اسم منتج';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              title = value;
+                            });
+                            _editedProduct = Product(
+                                id: _editedProduct.id,
+                                category: _editedProduct.category,
+                                title: value,
+                                description: _editedProduct.description,
+                                price: _editedProduct.price,
+                                weight: _editedProduct.weight,
+                                imageUrl: _editedProduct.imageUrl,
+                                isFavorite: _editedProduct.isFavorite);
+                          },
+                        ),
+                        SizedBox(height: 8),
+                        TextFormField(
+                          textDirection: TextDirection.rtl,
+                          keyboardType: TextInputType.number,
+                          focusNode: _priceFocusNode,
+                          initialValue: _initialValues['price'].toString(),
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: BorderSide()),
+                            labelText: 'السعر',
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 12),
-                      TextFormField(
-                        textDirection: TextDirection.rtl,
-                        initialValue: _initialValues['title'].toString(),
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide()),
-                          labelText: 'اسم المنتج',
+                          textInputAction: TextInputAction.next,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context)
+                                .requestFocus(_descriptionFocusNode);
+                          },
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'من فضلك ادخل السعر';
+                            }
+                            if (double.tryParse(value) == null) {
+                              return 'من فضلك ادخل السعر';
+                            }
+                            if (double.tryParse(value)! <= 0) {
+                              return 'من فضلك ادخل سعر اكبر من الصفر';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              price = double.tryParse(value!);
+                            });
+                            _editedProduct = Product(
+                                id: _editedProduct.id,
+                                category: _editedProduct.category,
+                                title: _editedProduct.title,
+                                description: _editedProduct.description,
+                                price: double.tryParse(value.toString()),
+                                weight: _editedProduct.weight,
+                                imageUrl: _editedProduct.imageUrl,
+                                isFavorite: _editedProduct.isFavorite);
+                          },
                         ),
-                        textInputAction: TextInputAction.next,
-                        onFieldSubmitted: (_) {
-                          FocusScope.of(context).requestFocus(_priceFocusNode);
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'من فضلك ادخل قيمة';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          setState(() {
-                            title = value;
-                          });
-                          _editedProduct = Product(
-                              id: _editedProduct.id,
-                              category: _editedProduct.category,
-                              title: value,
-                              description: _editedProduct.description,
-                              price: _editedProduct.price,
-                              weight: _editedProduct.weight,
-                              imageUrl: _editedProduct.imageUrl,
-                              isFavorite: _editedProduct.isFavorite);
-                        },
-                      ),
-                      SizedBox(height: 8),
-                      TextFormField(
-                        textDirection: TextDirection.rtl,
-                        keyboardType: TextInputType.number,
-                        focusNode: _priceFocusNode,
-                        initialValue: _initialValues['price'].toString(),
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide()),
-                          labelText: 'السعر',
-                        ),
-                        textInputAction: TextInputAction.next,
-                        onFieldSubmitted: (_) {
-                          FocusScope.of(context)
-                              .requestFocus(_descriptionFocusNode);
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'من فضلك ادخل السعر';
-                          }
-                          if (double.tryParse(value) == null) {
-                            return 'من فضلك ادخل السعر';
-                          }
-                          if (double.tryParse(value)! <= 0) {
-                            return 'من فضلك ادخل سعر اكبر من الصفر';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          setState(() {
-                            price = double.tryParse(value!);
-                          });
-                          _editedProduct = Product(
-                              id: _editedProduct.id,
-                              category: _editedProduct.category,
-                              title: _editedProduct.title,
-                              description: _editedProduct.description,
-                              price: double.tryParse(value.toString()),
-                              weight: _editedProduct.weight,
-                              imageUrl: _editedProduct.imageUrl,
-                              isFavorite: _editedProduct.isFavorite);
-                        },
-                      ),
-                      SizedBox(height: 8),
-                      TextFormField(
-                        textDirection: TextDirection.rtl,
-                        keyboardType: TextInputType.multiline,
-                        focusNode: _descriptionFocusNode,
-                        initialValue: _initialValues['description'].toString(),
-                        maxLines: 3,
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide()),
-                          labelText: 'وصف المنتج',
-                        ),
-                        textInputAction: TextInputAction.next,
-                        onFieldSubmitted: (_) {
-                          FocusScope.of(context).requestFocus(_weightFocusNode);
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'من فضلك ادخل وصف للمنتج';
-                          }
-                          if (value.length <= 10) {
-                            return 'من فضلك ادخل وصف اكبر من 10 احرف';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          setState(() {
-                            description = value;
-                          });
-                          _editedProduct = Product(
-                              id: _editedProduct.id,
-                              category: _editedProduct.category,
-                              title: _editedProduct.title,
-                              description: value,
-                              price: _editedProduct.price,
-                              weight: _editedProduct.weight,
-                              imageUrl: _editedProduct.imageUrl,
-                              isFavorite: _editedProduct.isFavorite);
-                        },
-                      ),
-                      SizedBox(height: 8),
-                      TextFormField(
-                        textDirection: TextDirection.rtl,
-                        keyboardType: TextInputType.number,
-                        initialValue: _initialValues['weight'].toString(),
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide()),
-                          labelText: 'الوزن',
-                        ),
-                        focusNode: _weightFocusNode,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'من فضلك ادخل الوزن';
-                          }
-                          if (double.tryParse(value) == null) {
-                            return 'من فضلك ادخل السعر';
-                          }
-                          if (double.tryParse(value)! <= 0) {
-                            return 'من فضلك ادخل وزن اكبر من الصفر';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          setState(() {
-                            weight = double.tryParse(value!);
-                          });
-                          _editedProduct = Product(
-                              id: _editedProduct.id,
-                              category: _editedProduct.category,
-                              title: _editedProduct.title,
-                              description: _editedProduct.description,
-                              price: _editedProduct.price,
-                              weight: double.tryParse(value.toString()),
-                              imageUrl: _editedProduct.imageUrl,
-                              isFavorite: _editedProduct.isFavorite);
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      Column(
-                        children: [
-                          CircleAvatar(
-                            radius: 100,
-                            backgroundColor: Colors.grey,
-                            backgroundImage: _pickedImage != null
-                                ? FileImage(_pickedImage!)
-                                : null,
+                        SizedBox(height: 8),
+                        TextFormField(
+                          textDirection: TextDirection.rtl,
+                          keyboardType: TextInputType.multiline,
+                          focusNode: _descriptionFocusNode,
+                          initialValue:
+                              _initialValues['description'].toString(),
+                          maxLines: 3,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: BorderSide()),
+                            labelText: 'وصف المنتج',
                           ),
-                          SizedBox(height: 5),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton.icon(
-                                onPressed: () => _pickImage(ImageSource.camera),
-                                icon: Icon(
-                                  Icons.photo_camera_outlined,
-                                  color: Colors.purple,
+                          textInputAction: TextInputAction.next,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context)
+                                .requestFocus(_weightFocusNode);
+                          },
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'من فضلك ادخل وصف للمنتج';
+                            }
+                            if (value.length <= 10) {
+                              return 'من فضلك ادخل وصف اكبر من 10 احرف';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              description = value;
+                            });
+                            _editedProduct = Product(
+                                id: _editedProduct.id,
+                                category: _editedProduct.category,
+                                title: _editedProduct.title,
+                                description: value,
+                                price: _editedProduct.price,
+                                weight: _editedProduct.weight,
+                                imageUrl: _editedProduct.imageUrl,
+                                isFavorite: _editedProduct.isFavorite);
+                          },
+                        ),
+                        SizedBox(height: 8),
+                        TextFormField(
+                          textDirection: TextDirection.rtl,
+                          keyboardType: TextInputType.number,
+                          initialValue: _initialValues['weight'].toString(),
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: BorderSide()),
+                            labelText: 'الوزن',
+                          ),
+                          focusNode: _weightFocusNode,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'من فضلك ادخل الوزن';
+                            }
+                            if (double.tryParse(value) == null) {
+                              return 'من فضلك ادخل السعر';
+                            }
+                            if (double.tryParse(value)! <= 0) {
+                              return 'من فضلك ادخل وزن اكبر من الصفر';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              weight = double.tryParse(value!);
+                            });
+                            _editedProduct = Product(
+                                id: _editedProduct.id,
+                                category: _editedProduct.category,
+                                title: _editedProduct.title,
+                                description: _editedProduct.description,
+                                price: _editedProduct.price,
+                                weight: double.tryParse(value.toString()),
+                                imageUrl: _editedProduct.imageUrl,
+                                isFavorite: _editedProduct.isFavorite);
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        Column(
+                          children: [
+                            CircleAvatar(
+                              radius: 100,
+                              backgroundColor: Colors.grey,
+                              backgroundImage: _pickedImage != null
+                                  ? FileImage(_pickedImage!)
+                                  : null,
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton.icon(
+                                  onPressed: () =>
+                                      _pickImage(ImageSource.camera),
+                                  icon: Icon(
+                                    Icons.photo_camera_outlined,
+                                    color: Colors.purple,
+                                  ),
+                                  label: Text(
+                                    'الكاميرا',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.purple),
+                                  ),
                                 ),
-                                label: Text(
-                                  'الكاميرا',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.purple),
+                                TextButton.icon(
+                                  onPressed: () =>
+                                      _pickImage(ImageSource.gallery),
+                                  icon: Icon(
+                                    Icons.image_outlined,
+                                    color: Colors.purple,
+                                  ),
+                                  label: Text(
+                                    'معرض الصور',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.purple),
+                                  ),
                                 ),
-                              ),
-                              TextButton.icon(
-                                onPressed: () =>
-                                    _pickImage(ImageSource.gallery),
-                                icon: Icon(
-                                  Icons.image_outlined,
-                                  color: Colors.purple,
-                                ),
-                                label: Text(
-                                  'معرض الصور',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.purple),
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ],
+                              ],
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+        ),
       ),
     );
   }
@@ -442,8 +454,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
       setState(() {
         _pickedImage = File(pickedImageFile.path);
       });
+      String name = pickedImageFile.path.toString();
+      RegExp exp = RegExp('\/((?:.(?!\/))+\$)');
+      String? fileName = exp.firstMatch(name)!.group(1);
+      print(fileName);
       Reference _ref =
-          FirebaseStorage.instance.ref().child('images').child('image.jpg');
+          FirebaseStorage.instance.ref().child('images').child('$fileName');
       UploadTask uploadTask = _ref.putFile(_pickedImage!);
       uploadTask.whenComplete(
         () async {

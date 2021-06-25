@@ -1,3 +1,8 @@
+import 'package:provider/provider.dart';
+import '../providers/cart.dart';
+import '../screens/cart_screen.dart';
+import '../widgets/badge.dart';
+
 import '../widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,7 +33,7 @@ class _TabScreenState extends State<TabScreen> {
         'title': 'المنتجات',
       },
       {
-        'title': 'منتجاتك المفضلة',
+        'title': 'المنتجات المفضلة',
       }
     ];
     return WillPopScope(
@@ -40,10 +45,24 @@ class _TabScreenState extends State<TabScreen> {
         textDirection: TextDirection.rtl,
         child: Scaffold(
           appBar: AppBar(
-            title: Center(
-              child: Text(
-                _pages[_selectedPageIndex]['title'].toString(),
-              ),
+            actions: [
+              _pages[_selectedPageIndex]['title'].toString() ==
+                      'المنتجات المفضلة'
+                  ? Consumer<Cart>(
+                      child: IconButton(
+                        icon: Icon(Icons.shopping_cart),
+                        onPressed: () => Navigator.of(context)
+                            .pushNamed(CartScreen.routeName),
+                      ),
+                      builder: (_, cart, ch) => Badge(
+                          value: cart.itemCount.toString(),
+                          color: Colors.amber,
+                          child: ch!),
+                    )
+                  : Container()
+            ],
+            title: Text(
+              _pages[_selectedPageIndex]['title'].toString(),
             ),
           ),
           body: _pages[_selectedPageIndex]['title'].toString() == 'المنتجات'
@@ -62,7 +81,7 @@ class _TabScreenState extends State<TabScreen> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.favorite),
-                label: 'منتجاتك المفضلة',
+                label: 'المنتجات المفضلة',
               ),
             ],
           ),

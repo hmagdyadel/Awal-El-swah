@@ -39,6 +39,8 @@ class _ProductOverState extends State<ProductOver> {
   }
   @override
   Widget build(BuildContext context) {
+    final String? name =
+    ModalRoute.of(context)!.settings.arguments as String;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -87,7 +89,7 @@ class _ProductOverState extends State<ProductOver> {
               )
             : Directionality(
                 textDirection: TextDirection.rtl,
-                child: ProductsGrid(_showOnlyFavorites),
+                child: ProductsGrid(_showOnlyFavorites,name!),
               ),
       ),
     );

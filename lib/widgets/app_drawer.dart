@@ -1,5 +1,6 @@
-import '../screens/category_screen.dart';
+import 'package:awal_el_swah/screens/favorites_screen.dart';
 
+import '../screens/tabs_screen.dart';
 import '../screens/auth_screen.dart';
 import '../screens/about_screen.dart';
 import '../screens/contact_us.dart';
@@ -47,7 +48,7 @@ class _AppDrawerState extends State<AppDrawer> {
     final userId = Provider.of<Auth>(context, listen: false).userId;
     return WillPopScope(
       onWillPop: () {
-        Navigator.pushReplacementNamed(context, ProductOver.routeName);
+        Navigator.pushReplacementNamed(context, TabScreen.routeName);
         return new Future(() => true);
       },
       child: Directionality(
@@ -85,7 +86,7 @@ class _AppDrawerState extends State<AppDrawer> {
                     Icons.category_outlined,
                     () {
                       Navigator.of(context)
-                          .pushReplacementNamed(CategoriesScreen.routeName);
+                          .pushReplacementNamed(TabScreen.routeName);
                     },
                     24.0,
                   ),

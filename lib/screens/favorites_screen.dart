@@ -4,13 +4,21 @@ import 'package:flutter/material.dart';
 import '../screens/tabs_screen.dart';
 import 'package:provider/provider.dart';
 
-class FavoriteScreen extends StatelessWidget {
+class FavoriteScreen extends StatefulWidget {
+  @override
+  _FavoriteScreenState createState() => _FavoriteScreenState();
+}
+
+class _FavoriteScreenState extends State<FavoriteScreen> {
+  @override
+  void initState() {
+    Provider.of<Products>(context, listen: false).fetchAndSetProducts();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final productData = Provider.of<Products>(context).favoriteItems;
-    bool isLandScape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
-    var deviceWidth = MediaQuery.of(context).size.width;
     if (productData!.isEmpty) {
       return WillPopScope(
         onWillPop: () {
@@ -26,20 +34,7 @@ class FavoriteScreen extends StatelessWidget {
         ),
       );
     } else {
-      return GridView.builder(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: deviceWidth <= 400 ? 400 : 500,
-          childAspectRatio: isLandScape
-              ? deviceWidth / (deviceWidth * 0.8)
-              : deviceWidth / (deviceWidth * 0.93),
-          crossAxisSpacing: 0,
-          mainAxisSpacing: 0,
-        ),
-        itemCount: productData.length,
-        itemBuilder: (ctx, index) {
-          return ProductsGrid(true);
-        },
-      );
+      return ProductsGrid(true, '');
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'package:awal_el_swah/screens/tabs_screen.dart';
+
 import '../screens/product_overview.dart';
 import '../widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,7 @@ class AboutApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        Navigator.pushReplacementNamed(context, ProductOver.routeName);
+        Navigator.pushReplacementNamed(context, TabScreen.routeName);
         return new Future(() => true);
       },
       child: Directionality(
@@ -53,7 +55,7 @@ class AboutApp extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 25, fontWeight: FontWeight.bold)),
                     SizedBox(height: 20),
-                    Text('تم تطويره في أبريل 2021', style: TextStyle(fontSize: 18)),
+                    Text('تم تطويره في يونيه 2021', style: TextStyle(fontSize: 18)),
                     SizedBox(height: 40),
                     Text('تم التطوير بواسطة',
                         style: TextStyle(
@@ -79,7 +81,6 @@ class AboutApp extends StatelessWidget {
                       title: Text(
                         'Haitham Magdy',
                         style: TextStyle(
-                          decoration: TextDecoration.underline,
                           color: Colors.blue,
                           fontSize: 24,
                           fontFamily: 'RobotoCondensed',

@@ -24,13 +24,12 @@ dev_dependencies:
   url_launcher:
   intl:
   http:
-  firebase_auth:
-  firebase_core:
   firebase_storage:
   pinput:
-  google_sign_in:
+  #google_sign_in:
   image_picker:
-  whatsapp_unilink:
+  firebase_core: ^1.3.0
+
 
 flutter_icons:
   android: true

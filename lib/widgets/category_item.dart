@@ -15,9 +15,7 @@ class CategoryItem extends StatelessWidget {
   void selectCategory(BuildContext ctx) {
     Navigator.of(ctx).pushNamed(
       ProductOver.routeName,
-      arguments: {
-        'id': id,
-      },
+      arguments: name,
     );
   }
 

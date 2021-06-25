@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:flutter/services.dart';
+
 import '../providers/auth.dart';
 import '../models/http_exception.dart';
 import 'package:flutter/animation.dart';
@@ -12,98 +14,104 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color.fromRGBO(215, 117, 255, 1).withOpacity(0.5),
-                    Color.fromRGBO(215, 188, 117, 1).withOpacity(0.9),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  stops: [0, 1],
+    return WillPopScope(
+      onWillPop: () {
+        SystemNavigator.pop();
+        return new Future(() => true);
+      },
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          body: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromRGBO(215, 117, 255, 1).withOpacity(0.5),
+                      Color.fromRGBO(215, 188, 117, 1).withOpacity(0.9),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    stops: [0, 1],
+                  ),
                 ),
               ),
-            ),
-            SingleChildScrollView(
-              child: Container(
-                height: deviceSize.height,
-                width: deviceSize.width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: 20),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 66),
-                        transform: Matrix4.rotationZ(-12 * pi / 180)
-                          ..translate(-10.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.deepOrange.shade800,
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 8,
-                                color: Colors.black26,
-                                offset: Offset(0, 2),
-                              )
-                            ]),
-                        child: Text(
-                          'أول السواح',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w900,
-                              fontFamily: 'RobotoCondensed'),
+              SingleChildScrollView(
+                child: Container(
+                  height: deviceSize.height,
+                  width: deviceSize.width,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 20),
+                          padding:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 66),
+                          transform: Matrix4.rotationZ(-12 * pi / 180)
+                            ..translate(-10.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.deepOrange.shade800,
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 8,
+                                  color: Colors.black26,
+                                  offset: Offset(0, 2),
+                                )
+                              ]),
+                          child: Text(
+                            'أول السواح',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w900,
+                                fontFamily: 'RobotoCondensed'),
+                          ),
                         ),
                       ),
-                    ),
-                    Flexible(
-                      child: AuthCard(),
-                      flex: deviceSize.width > 600 ? 2 : 2,
-                    ),
-                    // SizedBox(
-                    //   height: 30,
-                    // ),
-                    // Flexible(
-                    //   child: SafeArea(
-                    //     child: Padding(
-                    //       padding: const EdgeInsets.only(
-                    //         left: 16,
-                    //         right: 16,
-                    //         bottom: 20,
-                    //       ),
-                    //       child: FutureBuilder(
-                    //         future: Authentication.initializeFirebase(
-                    //             context: context),
-                    //         builder: (context, snapshot) {
-                    //           if (snapshot.hasError) {
-                    //             return Text('Error initializing Firebase');
-                    //           } else if (snapshot.connectionState ==
-                    //               ConnectionState.done) {
-                    //             return GoogleSignInButton();
-                    //           }
-                    //           return CircularProgressIndicator(
-                    //             valueColor: AlwaysStoppedAnimation<Color>(
-                    //                 Colors.orange),
-                    //           );
-                    //         },
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
+                      Flexible(
+                        child: AuthCard(),
+                        flex: deviceSize.width > 600 ? 2 : 2,
+                      ),
+                      // SizedBox(
+                      //   height: 30,
+                      // ),
+                      // Flexible(
+                      //   child: SafeArea(
+                      //     child: Padding(
+                      //       padding: const EdgeInsets.only(
+                      //         left: 16,
+                      //         right: 16,
+                      //         bottom: 20,
+                      //       ),
+                      //       child: FutureBuilder(
+                      //         future: Authentication.initializeFirebase(
+                      //             context: context),
+                      //         builder: (context, snapshot) {
+                      //           if (snapshot.hasError) {
+                      //             return Text('Error initializing Firebase');
+                      //           } else if (snapshot.connectionState ==
+                      //               ConnectionState.done) {
+                      //             return GoogleSignInButton();
+                      //           }
+                      //           return CircularProgressIndicator(
+                      //             valueColor: AlwaysStoppedAnimation<Color>(
+                      //                 Colors.orange),
+                      //           );
+                      //         },
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

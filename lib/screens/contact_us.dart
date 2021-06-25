@@ -1,6 +1,5 @@
-import 'package:awal_el_swah/widgets/app_drawer.dart';
-
-import '../screens/product_overview.dart';
+import '../screens/tabs_screen.dart';
+import '../widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,7 +10,7 @@ class ContactUs extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        Navigator.pushReplacementNamed(context, ProductOver.routeName);
+        Navigator.pushReplacementNamed(context, TabScreen.routeName);
         return new Future(() => true);
       },
       child: Directionality(

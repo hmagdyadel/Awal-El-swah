@@ -61,18 +61,31 @@ class Products with ChangeNotifier {
     return _items!.where((prodItem) => prodItem.isFavorite).toList();
   }
 
+  List<Product> favoriteCat(String name) {
+    return _items!
+        .where((prodItem) => prodItem.isFavorite && prodItem.category == name)
+        .toList();
+  }
+
+  List<Product> filteredItems(String name) {
+    return _items!.where((prodItem) => prodItem.category == name).toList();
+  }
+
   Product findById(String id) {
     return _items!.firstWhere((prod) => prod.id == id);
   }
 
   Future<void> fetchAndSetProducts() async {
-    final filteredString ='orderBy="creatorId"&equalTo="$userId"';
+    //final filteredString ='orderBy="category"&equalTo="name"';
+    // Uri url = Uri.parse(
+    //     'https://awal-elswah-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filteredString');
     Uri url = Uri.parse(
-        'https://awal-elswah-default-rtdb.firebaseio.com/products.json?auth=$authToken$filteredString');
+        'https://awal-elswah-default-rtdb.firebaseio.com/products.json?auth=$authToken');
+
     try {
       final res = await http.get(url);
       final Map<String, dynamic>? extractedData =
-      json.decode(res.body) as Map<String, dynamic>;
+          json.decode(res.body) as Map<String, dynamic>;
       if (extractedData == null) {
         return;
       }

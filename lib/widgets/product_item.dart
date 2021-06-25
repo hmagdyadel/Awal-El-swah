@@ -34,9 +34,11 @@ class ProductItem extends StatelessWidget {
                     child: InteractiveViewer(
                       child: FadeInImage(
                         width: MediaQuery.of(context).size.width - 60,
-                        height: MediaQuery.of(context).size.height / 3.87,
+                        height: MediaQuery.of(context).size.height / 3.9,
                         placeholder: AssetImage('assets/icons/placeholder.jpg'),
-                        image: NetworkImage(product.imageUrl.toString()),
+                        image: NetworkImage(product.imageUrl.toString() != null
+                            ? product.imageUrl.toString()
+                            : 'assets/icons/placeholder.jpg'),
                         fit: BoxFit.contain,
                       ),
                     ),
