@@ -135,6 +135,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   bool? isFavorite;
 
   List _catList = [
+    'عروض اليوم',
     'لحوم',
     'عسل نحل',
     'جبن والبان',
@@ -148,7 +149,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
     'تسالي',
     'خلطات وتتبيلات',
     'خضروات مجمدة',
-    'منتجات صيامي'
+    'منتجات صيامي',
+    'منتجات أخري'
   ];
 
   @override

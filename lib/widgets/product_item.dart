@@ -18,9 +18,9 @@ class ProductItem extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
-        elevation: 4,
+        elevation: 6,
         margin: EdgeInsets.all(10),
-        child: Column(
+        child: Stack(
           children: [
             Stack(
               children: [
@@ -33,13 +33,14 @@ class ProductItem extends StatelessWidget {
                     tag: product.id.toString(),
                     child: InteractiveViewer(
                       child: FadeInImage(
-                        width: MediaQuery.of(context).size.width - 60,
+                        width: MediaQuery.of(context).size.width - 52,
                         height: MediaQuery.of(context).size.height / 3.9,
                         placeholder: AssetImage('assets/icons/placeholder.jpg'),
-                        image: NetworkImage(product.imageUrl.toString() != null
-                            ? product.imageUrl.toString()
-                            : 'assets/icons/placeholder.jpg'),
-                        fit: BoxFit.contain,
+                        image: NetworkImage(product.imageUrl.toString()),
+                        imageErrorBuilder: (context,error,stackTrace){
+                          return Image.asset('assets/icons/placeholder.jpg',fit: BoxFit.cover,);
+                        },
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -66,80 +67,84 @@ class ProductItem extends StatelessWidget {
                 ),
               ],
             ),
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.black54.withOpacity(0.8),
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(15),
-                    bottomLeft: Radius.circular(15),
-                  )),
-              child: Padding(
-                padding: const EdgeInsets.all(0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          '${product.weight}  جم  ',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                        SizedBox(width: 5),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          '${product.price} ج.م  ',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                          color: Colors.white,
-                          icon: Icon(Icons.shopping_cart),
-                          iconSize: 30,
-                          onPressed: () {
-                            cart.addItem(
-                                product.id.toString(),
-                                product.price!.toDouble(),
-                                product.title.toString());
-                            Scaffold.of(context).hideCurrentSnackBar();
-                            Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text('تم الإضافة إلي العربة'),
-                              duration: Duration(seconds: 2),
-                              action: SnackBarAction(
-                                label: 'إلغاء',
-                                onPressed: () {
-                                  cart.removeSingleItem(product.id.toString());
-                                },
-                              ),
-                            ));
-                          },
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              product.toggleFavoriteStatus(
-                                  authData.token.toString(),
-                                  authData.userId.toString());
-                            },
-                            color: Colors.pink,
+            Positioned(
+              bottom: 1,
+              child: Container(
+                width: MediaQuery.of(context).size.width-52,
+                decoration: BoxDecoration(
+                    color: Colors.black54.withOpacity(0.8),
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(15),
+                      bottomLeft: Radius.circular(15),
+                    )),
+                child: Padding(
+                  padding: const EdgeInsets.all(0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            '${product.weight}  جم  ',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                          SizedBox(width: 5),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            '${product.price} ج.م  ',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            color: Colors.white,
+                            icon: Icon(Icons.shopping_cart),
                             iconSize: 30,
-                            icon: Icon(product.isFavorite
-                                ? Icons.favorite
-                                : Icons.favorite_border)),
-                      ],
-                    ),
-                  ],
+                            onPressed: () {
+                              cart.addItem(
+                                  product.id.toString(),
+                                  product.price!.toDouble(),
+                                  product.title.toString());
+                              Scaffold.of(context).hideCurrentSnackBar();
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text('تم الإضافة إلي العربة'),
+                                duration: Duration(seconds: 2),
+                                action: SnackBarAction(
+                                  label: 'إلغاء',
+                                  onPressed: () {
+                                    cart.removeSingleItem(product.id.toString());
+                                  },
+                                ),
+                              ));
+                            },
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                product.toggleFavoriteStatus(
+                                    authData.token.toString(),
+                                    authData.userId.toString());
+                              },
+                              color: Colors.pink,
+                              iconSize: 30,
+                              icon: Icon(product.isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border)),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

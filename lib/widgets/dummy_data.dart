@@ -4,63 +4,68 @@ import '../models/category.dart';
 const DUMMY_CATEGORIES = const [
   Category(
     id: 'c1',
-    name: "لحوم",
+    name: "عروض اليوم",
     color: Colors.blue,
   ),
   Category(
     id: 'c2',
-    name: 'عسل نحل',
+    name: "لحوم",
     color: Colors.red,
   ),
   Category(
     id: 'c3',
-    name: 'جبن والبان',
+    name: 'عسل نحل',
     color: Colors.orange,
   ),
   Category(
     id: 'c4',
-    name: 'توابل وبهارات',
+    name: 'جبن والبان',
     color: Colors.green,
   ),
   Category(
     id: 'c5',
-    name: 'بقوليات',
+    name: 'توابل وبهارات',
     color: Colors.pink,
   ),
   Category(
     id: 'c6',
-    name: 'مشروبات',
+    name: 'بقوليات',
     color: Colors.brown,
   ),
   Category(
     id: 'c7',
-    name: 'أسماك مملحة',
+    name: 'مشروبات',
     color: Colors.blue,
   ),
   Category(
     id: 'c8',
-    name: 'زيوت طبيعية',
+    name: 'أسماك مملحة',
     color: Colors.red,
   ),
   Category(
     id: 'c9',
-    name: 'مخللات',
+    name: 'زيوت طبيعية',
     color: Colors.orange,
   ),
   Category(
     id: 'c10',
-    name: 'منظفات',
+    name: 'مخللات',
     color: Colors.green,
   ),
   Category(
     id: 'c11',
-    name: 'تسالي',
+    name: 'منظفات',
     color: Colors.pink,
   ),
   Category(
     id: 'c12',
-    name: 'خلطات وتتبيلات',
+    name: 'تسالي',
     color: Colors.brown,
+  ),
+  Category(
+    id: 'c13',
+    name: 'خلطات وتتبيلات',
+    color: Colors.blue,
   ),
   Category(
     id: 'c14',
@@ -71,5 +76,11 @@ const DUMMY_CATEGORIES = const [
     id: 'c15',
     name: 'منتجات صيامي',
     color: Colors.orange,
+  ),
+
+  Category(
+    id: 'c16',
+    name: 'منتجات أخري',
+    color: Colors.green,
   ),
 ];

@@ -1,4 +1,4 @@
-import 'package:awal_el_swah/screens/favorites_screen.dart';
+
 import 'package:flutter/services.dart';
 
 import '../screens/category_screen.dart';

@@ -1,10 +1,7 @@
-import 'package:awal_el_swah/screens/favorites_screen.dart';
-
 import '../screens/tabs_screen.dart';
 import '../screens/auth_screen.dart';
 import '../screens/about_screen.dart';
 import '../screens/contact_us.dart';
-import '../screens/product_overview.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../screens/orders_screen.dart';
@@ -207,7 +204,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   });
 
                   Navigator.pop(ctx);
-                  if (codeDialog == '1234') {
+                  if (codeDialog == '9735') {
                     codeDialog = '';
                     valueText = '';
                     Navigator.of(context)

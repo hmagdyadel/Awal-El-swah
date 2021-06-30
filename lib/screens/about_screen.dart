@@ -1,6 +1,5 @@
-import 'package:awal_el_swah/screens/tabs_screen.dart';
+import '../screens/tabs_screen.dart';
 
-import '../screens/product_overview.dart';
 import '../widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
